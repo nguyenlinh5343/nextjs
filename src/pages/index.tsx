@@ -3,14 +3,16 @@ import Image from "next/image";
 import styles from "@styles/Home.module.css";
 import * as React from "react";
 import Header from "@components/head";
-import QuizModal from "@components/dashboard/modal-quiz";
+import QuizModal from "@components/quiz/modal-quiz";
 import Button from "@mui/material/Button";
 const Home: NextPage = () => {
   const [open, setOpen] = React.useState(false);
   const [namequiz, setNamequiz] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // setNamequiz(e);
+  };
   return (
     <div>
       <Header title={"quiz"} image={""}></Header>
@@ -42,6 +44,8 @@ const Home: NextPage = () => {
             handleClose={handleClose}
             open={open}
             namequiz={"namequiz"}
+            handleInput={handleInput}
+            title={""}
           />
           <a href="https://nextjs.org/learn" className={styles.card}>
             <h2>Learn &rarr;</h2>

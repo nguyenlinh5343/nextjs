@@ -13,7 +13,13 @@ import AddIcon from "@mui/icons-material/Add";
 import InputLabel from "@mui/material/InputLabel";
 import Input from "@mui/material/Input";
 import TextField from "@mui/material/TextField";
-
+import { v4 as uuid } from "uuid";
+import { useEffect } from "react";
+import { Label } from "@mui/icons-material";
+interface IAnswer {
+  id: string;
+  value: string;
+}
 interface Props {
   handleClose: (message: any) => void;
   // handleInput: (message: string) => void;
@@ -21,13 +27,13 @@ interface Props {
   open: boolean;
   title: string;
   owner: string;
-  key: string;
+  id: string;
 }
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
-  width: "calc(90% - 30px)",
+  width: "calc(80%)",
   overflow: "auto",
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
@@ -36,19 +42,51 @@ const style = {
   p: 4
   // height: "100vh"
 };
-
+[];
 export default function ModalQuestion({
   handleClose,
   open,
   title,
   owner,
-  key
+  id
 }: Props) {
   const [namequiz, setNamequiz] = React.useState("");
+  const [selectedValue, setSelectedValue] = React.useState("");
+  const [anwsers, setAnwsers] = React.useState<IAnswer[]>([]);
   const [name, setName] = React.useState("");
+
+  useEffect(() => {
+    console.log("anwsers", anwsers);
+  }, [anwsers]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNamequiz(e.target.value);
   };
+
+  const handleChangeanwser = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const isExit = anwsers?.some((item: IAnswer) => console.log(item));
+    console.log("isExit", isExit);
+
+    if (anwsers?.some((item: IAnswer) => item.id === name)) {
+      const dataUpdate = anwsers.map((a) =>
+        a.id === name ? { ...a, value: value } : { ...a }
+      );
+      setAnwsers(dataUpdate);
+    } else {
+      setAnwsers([...anwsers, { id: name, value: value }]);
+    }
+  };
+
+  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedValue(e.target.value);
+  };
+
+  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    console.log("submit");
+  };
+  console.log(selectedValue);
   return (
     <div>
       {/* <Button onClick={handleOpen}>Open modal</Button> */}
@@ -59,7 +97,7 @@ export default function ModalQuestion({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div key={key}>
+          <div id={id}>
             <Stack
               direction="column"
               sx={{
@@ -68,101 +106,107 @@ export default function ModalQuestion({
                 py: 3
               }}
             >
-              <FormControl
-                variant="standard"
-                sx={{
-                  mb: 4
-                }}
-              >
-                <InputLabel htmlFor="component-simple">Name</InputLabel>
-                <Input
-                  id="component-simple"
-                  value={name}
-                  onChange={handleChange}
-                />
-              </FormControl>
-              {/* <Typography
-                component="div"
-                variant="h5"
-                pb={3}
-                mr={3}
-                sx={{ borderBottom: "1px solid rgb(242 242 242)" }}
-              >
-                {} {title} aaa
-              </Typography> */}
-              {/* <FormControl>
-                <RadioGroup
-                  row
+              <form onSubmit={() => handleSubmit}>
+                <FormControl
+                  variant="standard"
                   sx={{
-                    my: 2,
-                    flexWrap: "wrap"
+                    mb: 4,
+                    width: "100%"
                   }}
+                >
+                  <TextField
+                    id="input-name"
+                    rows={3}
+                    onChange={handleChange}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        height: "200px"
+                      }
+                    }}
+                  />
+                </FormControl>
+                {/* get id , set result */}
+                <RadioGroup
                   aria-labelledby="demo-row-radio-buttons-group-label"
                   name="row-radio-buttons-group"
+                  onChange={handleRadioChange}
                 >
-                  <FormControlLabel
-                    value="female"
-                    control={<Radio />}
-                    label="Female FemaleFemaleFemaleFemale FemaleFemaleFemaleFemale FemaleFemaleFemaleFemale"
-                    sx={{
-                      width: "calc(50% - 16px)",
-                      borderRadius: "10px",
-                      border: "1px solid rgba(9, 9, 9, 0.1)",
-                      mb: 2,
-                      ml: 0,
-                      p: 1
-                    }}
-                  />
-                  <FormControlLabel
-                    sx={{
-                      width: "calc(50% - 16px)",
-                      borderRadius: "10px",
-                      border: "1px solid rgba(9, 9, 9, 0.1)",
-                      mb: 2,
-                      ml: 0,
-                      p: 1
-                    }}
-                    value="male"
-                    control={<Radio />}
-                    label="Male"
-                  />
-                  <FormControlLabel
-                    sx={{
-                      width: "calc(50% - 16px)",
-                      borderRadius: "10px",
-                      border: "1px solid rgba(9, 9, 9, 0.1)",
-                      mb: 2,
-                      ml: 0,
-                      p: 1
-                    }}
-                    value="other"
-                    control={<Radio />}
-                    label="Other"
-                  />
-                  <FormControlLabel
-                    sx={{
-                      width: "calc(50% - 16px)",
-                      borderRadius: "10px",
-                      border: "1px solid rgba(9, 9, 9, 0.1)",
-                      mb: 2,
-                      ml: 0,
-                      p: 1
-                    }}
-                    value="disabled"
-                    control={<Radio />}
-                    label="other"
-                  />
+                  <Stack flexDirection="row">
+                    <FormControlLabel
+                      value="a"
+                      name="answer1"
+                      control={<Radio />}
+                      label={
+                        <TextField
+                          required
+                          id="outlined-name"
+                          name="answer1"
+                          onChange={handleChangeanwser}
+                          sx={{ mr: 3 }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value="b"
+                      control={<Radio />}
+                      name="answer2"
+                      label={
+                        <TextField
+                          id="outlined-name"
+                          name="answer2"
+                          onChange={handleChangeanwser}
+                          required
+                          sx={{ mr: 3 }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value="c"
+                      control={<Radio />}
+                      name="answer3"
+                      label={
+                        <TextField
+                          required
+                          id="outlined-name"
+                          name="answer3"
+                          onChange={handleChangeanwser}
+                          sx={{ mr: 3 }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value="d"
+                      control={<Radio />}
+                      name="answer4"
+                      label={
+                        <TextField
+                          required
+                          id="outlined-name"
+                          name="answer4"
+                          onChange={handleChangeanwser}
+                          sx={{ mr: 3 }}
+                        />
+                      }
+                    />
+                  </Stack>
                 </RadioGroup>
-              </FormControl> */}
-              <Box sx={{}}>
-                <TextField
-                  id="outlined-name"
-                  // value={name}
-                  onChange={handleChange}
-                  sx={{ mr: 3 }}
-                />
-                <TextField id="outlined-name" />
-              </Box>
+                <Stack
+                  justifyContent="flex-end"
+                  alignItems="flex-end"
+                  direction="row"
+                >
+                  <Button
+                    onClick={handleClose}
+                    variant="outlined"
+                    sx={{ mr: 2 }}
+                  >
+                    Cancle
+                  </Button>
+                  <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+                    Save
+                  </Button>
+                </Stack>
+              </form>
             </Stack>
           </div>
         </Box>

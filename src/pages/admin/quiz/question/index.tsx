@@ -26,7 +26,9 @@ type Props = {
 };
 const Question = ({ title, owner, key }: Props) => {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setOpen(true);
+  };
   const handleOpenq = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [checked, setChecked] = React.useState(false);
@@ -38,7 +40,14 @@ const Question = ({ title, owner, key }: Props) => {
   return (
     <>
       <Container maxWidth="lg">
-        <ItemQuiz key={""} title={""} owner={""}></ItemQuiz>
+        <ItemQuiz
+          key={""}
+          title={""}
+          owner={""}
+          id={""}
+          item={undefined}
+          handleDelete={handleClose}
+        ></ItemQuiz>
         <div key={key}>
           <Stack
             direction="column"
@@ -170,7 +179,7 @@ const Question = ({ title, owner, key }: Props) => {
           <ModalQuestion
             handleClose={handleClose}
             open={open}
-            key={""}
+            id={""}
             title={""}
             owner={""}
           />

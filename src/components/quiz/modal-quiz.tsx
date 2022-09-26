@@ -11,7 +11,9 @@ interface Props {
   // handleInput: (message: string) => void;
   // handleSubmit: (message: any) => void;
   open: boolean;
-  // namequiz: string;
+  title: string;
+  namequiz: string;
+  handleInput: (message: any) => void;
 }
 const style = {
   position: "absolute" as "absolute",
@@ -26,14 +28,20 @@ const style = {
   p: 4
 };
 
-export default function QuizModal({ handleClose, open }: Props) {
-  const [namequiz, setNamequiz] = React.useState("");
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNamequiz(e.target.value);
-  };
-  function HandleSubmit() {
+export default function QuizModal({
+  handleClose,
+  open,
+  title,
+  namequiz,
+  handleInput
+}: Props) {
+  // const [namequiz, setNamequiz] = React.useState("");
+  // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setNamequiz(e.target.value);
+  // };
+  const handleSubmit = () => {
     console.log(namequiz);
-  }
+  };
   return (
     <div>
       {/**/}
@@ -45,7 +53,7 @@ export default function QuizModal({ handleClose, open }: Props) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Create quiz
+            Edit quiz
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
@@ -57,17 +65,17 @@ export default function QuizModal({ handleClose, open }: Props) {
             name="quiz"
             type="text"
             value={namequiz}
-            placeholder="Enter a quiz name"
             // pass down to FormLabel as children
             label="Name this quiz"
             sx={{ mt: 3 }}
             onChange={handleInput}
+            placeholder={title}
           />
           <Stack direction="row" mt={2} justifyContent="flex-end" spacing={2}>
             <Button size="small" variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
-            <Button onClick={HandleSubmit} size="small" variant="contained">
+            <Button onClick={handleSubmit} size="small" variant="contained">
               Save
             </Button>
           </Stack>
